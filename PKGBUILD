@@ -57,9 +57,18 @@ license=(
   'custom'
 )
 url="http://gcc.gnu.org"
-depends=("${_target}-binutils>=2.29-1" 'zlib')
-conflicts=('m68k-elf-gcc')
-options=('!emptydirs' '!distcc' '!strip')
+depends=(
+  "${_target}-binutils>=2.29-1"
+  'zlib'
+)
+conflicts=(
+  'm68k-elf-gcc'
+)
+options=(
+  '!emptydirs'
+  '!distcc'
+  '!strip'
+)
 PKGEXT="pkg.tar.zst"
 source=("https://ftp.gnu.org/gnu/gcc/gcc-${pkgver}/gcc-${pkgver}.tar.xz"
         "https://ftp.gnu.org/gnu/gcc/gcc-${pkgver}/gcc-${pkgver}.tar.xz.sig"
