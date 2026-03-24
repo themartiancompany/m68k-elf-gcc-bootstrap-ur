@@ -1,4 +1,35 @@
-# Maintainer: Jesus Alonso <doragasu at hotmail dot com>
+# SPDX-License-Identifier: AGPL-3.0
+
+#    ----------------------------------------------------------------------
+#    Copyright © 2024, 2025, 2026  Pellegrino Prevete
+#
+#    All rights reserved
+#    ----------------------------------------------------------------------
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of
+#    the License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.
+#    If not, see <https://www.gnu.org/licenses/>.
+
+# Maintainers:
+#   Truocolo
+#     <truocolo@aol.com>
+#     <truocolo@0x6E5163fC4BFc1511Dbe06bB605cc14a3e462332b>
+#   Pellegrino Prevete (dvorak)
+#     <pellegrinoprevete@gmail.com>
+#     <dvorak@0x87003Bd6C074C713783df04f36517451fF34CBEf>
+#   Jesus Alonso
+#     <doragasu at hotmail dot com>
+
 # NOTE: As I want these packages for Genesis/Megadrive development, they do
 # only support the m68000 CPU. If you want to support other m68k variants,
 # either modify _target_cpu to suit your needs, or go wild, remove the
@@ -15,8 +46,16 @@ _mpcver=1.3.1
 _gmpver=6.3.0
 pkgrel=1
 pkgdesc="The GNU Compiler Collection. Bootstrap for toolchain building (${_target})"
-arch=('i686' 'x86_64')
-license=('GPL' 'LGPL' 'FDL' 'custom')
+arch=(
+  'i686'
+  'x86_64'
+)
+license=(
+  'GPL'
+  'LGPL'
+  'FDL'
+  'custom'
+)
 url="http://gcc.gnu.org"
 depends=("${_target}-binutils>=2.29-1" 'zlib')
 conflicts=('m68k-elf-gcc')
