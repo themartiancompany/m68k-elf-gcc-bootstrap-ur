@@ -39,15 +39,27 @@
 
 _target=m68k-elf
 _target_cpu=m68000
-pkgname=${_target}-gcc-bootstrap
+pkgbase="${_target}-gcc-bootstrap"
+pkgname=(
+  "${pkgbase}"
+)
 pkgver=15.2.0
 _mpfrver=4.2.2
 _mpcver=1.3.1
 _gmpver=6.3.0
-pkgrel=1
-pkgdesc="The GNU Compiler Collection. Bootstrap for toolchain building (${_target})"
+pkgrel=2
+_pkgdesc=(
+  "The GNU Compiler Collection."
+  "Bootstrap for toolchain building (${_target})"
+)
 arch=(
+  "aarch64"
+  "armv8l"
+  "armv7l"
   'i686'
+  "mips"
+  "pentium4"
+  "powerpc"
   'x86_64'
 )
 license=(
@@ -69,21 +81,34 @@ options=(
   '!distcc'
   '!strip'
 )
-PKGEXT="pkg.tar.zst"
-source=("https://ftp.gnu.org/gnu/gcc/gcc-${pkgver}/gcc-${pkgver}.tar.xz"
-        "https://ftp.gnu.org/gnu/gcc/gcc-${pkgver}/gcc-${pkgver}.tar.xz.sig"
-        "https://ftp.gnu.org/gnu/mpfr/mpfr-${_mpfrver}.tar.xz"
-        "https://ftp.gnu.org/gnu/mpfr/mpfr-${_mpfrver}.tar.xz.sig"
-        "https://ftp.gnu.org/gnu/mpc/mpc-${_mpcver}.tar.gz"
-        "https://ftp.gnu.org/gnu/mpc/mpc-${_mpcver}.tar.gz.sig"
-        "https://ftp.gnu.org/gnu/gmp/gmp-${_gmpver}.tar.xz"
-        "https://ftp.gnu.org/gnu/gmp/gmp-${_gmpver}.tar.xz.sig")
+PKGEXT="pkg.tar.xz"
+source=(
+  "https://ftp.gnu.org/gnu/gcc/gcc-${pkgver}/gcc-${pkgver}.tar.xz"
+  "https://ftp.gnu.org/gnu/gcc/gcc-${pkgver}/gcc-${pkgver}.tar.xz.sig"
+  "https://ftp.gnu.org/gnu/mpfr/mpfr-${_mpfrver}.tar.xz"
+  "https://ftp.gnu.org/gnu/mpfr/mpfr-${_mpfrver}.tar.xz.sig"
+  "https://ftp.gnu.org/gnu/mpc/mpc-${_mpcver}.tar.gz"
+  "https://ftp.gnu.org/gnu/mpc/mpc-${_mpcver}.tar.gz.sig"
+  "https://ftp.gnu.org/gnu/gmp/gmp-${_gmpver}.tar.xz"
+  "https://ftp.gnu.org/gnu/gmp/gmp-${_gmpver}.tar.xz.sig"
+)
         
-sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
-validpgpkeys=(13975A70E63C361C73AE69EF6EEB81F8981C74C7
-              A534BE3F83E241D918280AEB5831D11A0D4DB02A
-              AD17A21EF8AED8F1CC02DBD9F7D5C9BF765C61E3
-              343C2FF0FBEE5EC2EDBEF399F3599FF828C67298)
+sha256sums=(
+  SKIP
+  SKIP
+  SKIP
+  SKIP
+  SKIP
+  SKIP
+  SKIP
+  SKIP
+)
+validpgpkeys=(
+  13975A70E63C361C73AE69EF6EEB81F8981C74C7
+  A534BE3F83E241D918280AEB5831D11A0D4DB02A
+  AD17A21EF8AED8F1CC02DBD9F7D5C9BF765C61E3
+  343C2FF0FBEE5EC2EDBEF399F3599FF828C67298
+)
 
 prepare() {
   cd ${srcdir}/gcc-${pkgver}
