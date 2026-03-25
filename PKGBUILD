@@ -47,7 +47,7 @@ pkgver=15.2.0
 _mpfrver=4.2.2
 _mpcver=1.3.1
 _gmpver=6.3.0
-pkgrel=2
+pkgrel=3
 _pkgdesc=(
   "The GNU Compiler Collection."
   "Bootstrap for toolchain building (${_target})"
@@ -73,8 +73,11 @@ depends=(
   "${_target}-binutils>=2.29-1"
   'zlib'
 )
+makedepends=(
+  "${_target}-binutils>=2.29-1"
+)
 conflicts=(
-  'm68k-elf-gcc'
+  "${_target}-gcc"
 )
 options=(
   '!emptydirs'
@@ -125,36 +128,56 @@ prepare() {
 }
 
 build() {
-  # GCC cannot be built with -Werror=format-security
-  export CFLAGS=${CFLAGS//-Werror=format-security/}
-  export CXXFLAGS=${CXXFLAGS//-Werror=format-security/}
-
-  cd ${srcdir}/gcc-build
-
-  ../gcc-${pkgver}/configure --prefix=/usr \
-    --target=${_target} \
-    --enable-languages="c" \
-    --disable-multilib \
-    --with-cpu=${_target_cpu} \
-    --with-system-zlib \
-    --with-libgloss \
-    --without-headers \
-    --disable-shared \
+  local \
+    _configure_opts=()
+  _configure_opts+=(
+    --prefix="/usr"
+    --target="${_target}"
+    --enable-languages="c"
+    --disable-multilib
+    --with-cpu="${_target_cpu}"
+    --with-system-zlib
+    --with-libgloss
+    --without-headers
+    --disable-shared
     --disable-nls
-
-  make all-gcc
+  )
+  # GCC cannot be built with -Werror=format-security
+  export \
+    CFLAGS=${CFLAGS//-Werror=format-security/}
+  export \
+    CXXFLAGS=${CXXFLAGS//-Werror=format-security/}
+  cd \
+    "${srcdir}/gcc-build"
+  "../gcc-${pkgver}/configure" \
+    "${_configure_opts[@]}"
+  make \
+    all-gcc
 }
 
 package() {
-  cd ${srcdir}/gcc-build
-
-  make DESTDIR=${pkgdir} install-gcc
-
-  rm -rf ${pkgdir}/usr/share
-
+  cd \
+    ${srcdir}/gcc-build
+  make \
+    DESTDIR=${pkgdir} \
+    "install-gcc"
+  rm \
+    -rf \
+    "${pkgdir}/usr/share"
   # strip it manually
-  strip ${pkgdir}/usr/bin/* 2>/dev/null || true
-  find ${pkgdir}/usr/lib -type f -exec /usr/bin/${_target}-strip \
-    --strip-unneeded {} \; 2>/dev/null || true
+  strip \
+    "${pkgdir}/usr/bin/"* \
+    2>"/dev/null" || \
+    true
+  find \
+    "${pkgdir}/usr/lib" \
+    -type \
+      "f" \
+    -exec \
+      "/usr/bin/${_target}-strip" \
+        --strip-unneeded \
+        {} \; \
+        2>"/dev/null" || \
+    true
 }
 
