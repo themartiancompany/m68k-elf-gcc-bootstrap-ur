@@ -78,7 +78,7 @@ pkgver=15.2.0
 _mpfrver=4.2.2
 _mpcver=1.3.1
 _gmpver=6.3.0
-pkgrel=7
+pkgrel=8
 _pkgdesc=(
   "The GNU Compiler Collection."
   "Bootstrap for toolchain building (${_target})"
@@ -166,6 +166,8 @@ prepare() {
 build() {
   local \
     _configure_opts=()
+  export \
+    CFLAGS="${CFLAGS} -Wno-unknown-warning-option"
   _configure_opts+=(
     --prefix="/usr"
     --target="${_target}"
