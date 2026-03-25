@@ -1680,6 +1680,31 @@ jobs:
             -c \
               "cd ${PWD} && _evmfs="false" _git="false" _git_service="github" reallymakepkg -v -u -w '/home/user/${_pkgbase}-build' -- -df --nocheck --skippgpcheck && ls -lsh" - \
             "user"
+          export \
+            _pkgname="$( \
+              _evmfs="false" \
+              _git_service="github" \
+              recipe-get \
+                -v \
+                "PKGBUILD" \
+                "pkgname")" \
+            _pkgver="$( \
+              _evmfs="false" \
+              _git_service="github" \
+              recipe-get \
+                -v \
+                "PKGBUILD" \
+                "pkgver")" \
+            _pkgrel="$( \
+              _evmfs="false" \
+              _git_service="github" \
+              recipe-get \
+                -v \
+                "PKGBUILD" \
+                "pkgrel")" && \
+          mv \
+            "${_pkgname}-${_pkgver}-${_pkgrel}-x86_64pkg.tar.xz" \
+            "${_pkgname}-${_pkgver}-${_pkgrel}x86_64.pkg.tar.xz" || \
       # - name:
       #     Installs the package.
       #   run: |
@@ -2119,6 +2144,32 @@ jobs:
             --skippgpcheck
           ls \
             -lsh
+          export \
+            _pkgname="$( \
+              _evmfs="false" \
+              _git_service="github" \
+              recipe-get \
+                -v \
+                "PKGBUILD" \
+                "pkgname")" \
+            _pkgver="$( \
+              _evmfs="false" \
+              _git_service="github" \
+              recipe-get \
+                -v \
+                "PKGBUILD" \
+                "pkgver")" \
+            _pkgrel="$( \
+              _evmfs="false" \
+              _git_service="github" \
+              recipe-get \
+                -v \
+                "PKGBUILD" \
+                "pkgrel")" && \
+          mv \
+            "${_pkgname}-${_pkgver}-${_pkgrel}-x86_64pkg.tar.xz" \
+            "${_pkgname}-${_pkgver}-${_pkgrel}x86_64.pkg.tar.xz" || \
+          true
           # _evmfs="false" \
           # _git_service="github" \
           # reallymakepkg \
