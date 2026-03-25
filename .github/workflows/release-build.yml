@@ -1704,7 +1704,8 @@ jobs:
                 "pkgrel")" && \
           mv \
             "${_pkgname}-${_pkgver}-${_pkgrel}-x86_64pkg.tar.xz" \
-            "${_pkgname}-${_pkgver}-${_pkgrel}x86_64.pkg.tar.xz" || \
+            "${_pkgname}-${_pkgver}-${_pkgrel}-x86_64.pkg.tar.xz" || \
+          true
       # - name:
       #     Installs the package.
       #   run: |
@@ -2168,7 +2169,7 @@ jobs:
                 "pkgrel")" && \
           mv \
             "${_pkgname}-${_pkgver}-${_pkgrel}-x86_64pkg.tar.xz" \
-            "${_pkgname}-${_pkgver}-${_pkgrel}x86_64.pkg.tar.xz" || \
+            "${_pkgname}-${_pkgver}-${_pkgrel}-x86_64.pkg.tar.xz" || \
           true
           # _evmfs="false" \
           # _git_service="github" \
