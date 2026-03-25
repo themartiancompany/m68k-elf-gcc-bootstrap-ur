@@ -78,7 +78,7 @@ pkgver=15.2.0
 _mpfrver=4.2.2
 _mpcver=1.3.1
 _gmpver=6.3.0
-pkgrel=8
+pkgrel=9
 _pkgdesc=(
   "The GNU Compiler Collection."
   "Bootstrap for toolchain building (${_target})"
@@ -193,7 +193,7 @@ build() {
     all-gcc
 }
 
-package() {
+package-m68k-elf-gcc-bootstrap() {
   cd \
     ${srcdir}/gcc-build
   make \

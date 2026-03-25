@@ -2117,6 +2117,8 @@ jobs:
             -df \
             --nocheck \
             --skippgpcheck
+          ls \
+            -lsh
           # _evmfs="false" \
           # _git_service="github" \
           # reallymakepkg \
