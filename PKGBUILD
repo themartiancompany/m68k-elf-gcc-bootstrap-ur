@@ -78,7 +78,7 @@ pkgver=15.2.0
 _mpfrver=4.2.2
 _mpcver=1.3.1
 _gmpver=6.3.0
-pkgrel=4
+pkgrel=5
 _pkgdesc=(
   "The GNU Compiler Collection."
   "Bootstrap for toolchain building (${_target})"
@@ -107,6 +107,11 @@ depends=(
 makedepends=(
   "${_target}-binutils>=2.29-1"
 )
+if [[ "${_os}" == "Android" ]]; then
+  makedepends+=(
+    "libmpc"
+  )
+fi
 conflicts=(
   "${_target}-gcc"
 )
