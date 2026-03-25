@@ -942,7 +942,7 @@ jobs:
           find \
             "${PWD}" \
             -iname \
-              "*.pkg.tar.*"
+              "*pkg.tar*"
           bash \
             ".github/android-arm32-fix"
       # - name:
@@ -1663,19 +1663,19 @@ jobs:
       - name:
           Builds the Arch package.
         run: |
-          export \
-            _pkgbase="$( \
-              _evmfs="false" \
-              _git_service="github" \
-              recipe-get \
-                "PKGBUILD" \
-                "pkgbase")"
           _evmfs="false" \
           _git_service="github" \
           recipe-get \
             -v \
             "PKGBUILD" \
             "pkgbase"
+          export \
+            _pkgbase="$( \
+              _evmfs="false" \
+              _git_service="github" \
+              recipe-get \
+                "PKGBUILD" \
+                "pkgbase")" && \
           su \
             -c \
               "cd ${PWD} && _evmfs="false" _git="false" _git_service="github" reallymakepkg -v -u -w '/home/user/${_pkgbase}-build' -- -df --nocheck --skippgpcheck && ls -lsh" - \

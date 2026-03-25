@@ -79,7 +79,7 @@ pkgver=15.2.0
 _mpfrver=4.2.2
 _mpcver=1.3.1
 _gmpver=6.3.0
-pkgrel=11
+pkgrel=12
 _pkgdesc=(
   "The GNU Compiler Collection."
   "Bootstrap for toolchain building (${_target})"
@@ -203,7 +203,7 @@ build() {
   "../${_tarname}/configure" \
     "${_configure_opts[@]}"
   make \
-    all-gcc
+    "all-${_pkg}"
 }
 
 package_m68k-elf-gcc-bootstrap() {
@@ -213,10 +213,10 @@ package_m68k-elf-gcc-bootstrap() {
     DESTDIR="${pkgdir}"
   )
   cd \
-    ${srcdir}/gcc-build
+    "${srcdir}/${_pkg}-build"
   make \
     "${_make_opts[@]}" \
-    "install-gcc"
+    "install-${_pkg}"
   rm \
     -rf \
     "${pkgdir}/usr/share"
