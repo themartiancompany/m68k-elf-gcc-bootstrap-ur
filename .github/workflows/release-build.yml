@@ -1685,21 +1685,18 @@ jobs:
               _evmfs="false" \
               _git_service="github" \
               recipe-get \
-                -v \
                 "PKGBUILD" \
                 "pkgname")" \
             _pkgver="$( \
               _evmfs="false" \
               _git_service="github" \
               recipe-get \
-                -v \
                 "PKGBUILD" \
                 "pkgver")" \
             _pkgrel="$( \
               _evmfs="false" \
               _git_service="github" \
               recipe-get \
-                -v \
                 "PKGBUILD" \
                 "pkgrel")" && \
           mv \
@@ -2150,21 +2147,18 @@ jobs:
               _evmfs="false" \
               _git_service="github" \
               recipe-get \
-                -v \
                 "PKGBUILD" \
                 "pkgname")" \
             _pkgver="$( \
               _evmfs="false" \
               _git_service="github" \
               recipe-get \
-                -v \
                 "PKGBUILD" \
                 "pkgver")" \
             _pkgrel="$( \
               _evmfs="false" \
               _git_service="github" \
               recipe-get \
-                -v \
                 "PKGBUILD" \
                 "pkgrel")" && \
           mv \
