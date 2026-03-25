@@ -1,7 +1,11 @@
 # SPDX-License-Identifier: AGPL-3.0
 
 #    ----------------------------------------------------------------------
-#    Copyright © 2024, 2025, 2026  Pellegrino Prevete
+#    Copyright © 2017, 2018, 2019, 2020, 2021,
+#                2022, 2023, 2024, 2025, 2026
+#                Jesus Alonso
+#    Copyright © 2022, 2023, 2024, 2025, 2026
+#                Pellegrino Prevete
 #
 #    All rights reserved
 #    ----------------------------------------------------------------------
@@ -84,6 +88,7 @@ _pkgdesc=(
   "The GNU Compiler Collection."
   "Bootstrap for toolchain building (${_target})"
 )
+pkgdesc="${_pkgdesc[*]}"
 arch=(
   "aarch64"
   "armv8l"
@@ -110,6 +115,8 @@ makedepends=(
 )
 if [[ "${_os}" == "Android" ]]; then
   makedepends+=(
+    # This may be why it doesnt build.
+    # Maybe it wants m68k-elf-mpc.
     "libmpc"
   )
 fi
@@ -133,7 +140,6 @@ source=(
   "https://ftp.gnu.org/gnu/gmp/gmp-${_gmpver}.tar.xz"
   "https://ftp.gnu.org/gnu/gmp/gmp-${_gmpver}.tar.xz.sig"
 )
-        
 sha256sums=(
   "SKIP"
   "SKIP"
@@ -165,7 +171,6 @@ prepare() {
   ln \
     -s \
     "../gmp-${_gmpver}"
-
   # hack! - some configure tests for
   # header files using "$CPP $CPPFLAGS"
   sed \
@@ -236,4 +241,3 @@ package_m68k-elf-gcc-bootstrap() {
         2>"/dev/null" || \
     true
 }
-

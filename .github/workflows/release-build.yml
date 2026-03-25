@@ -3,18 +3,19 @@
 #
 #    release.yaml
 #
-#    ----------------------------------------------------------------------
+#    ------------------------------------------------------------
 #    Copyright © 2024, 2025
 #                2026       Guilherme Janczak,
 #                           Robert Kirkman,
 #                           Pellegrino Prevete
 #
 #    All rights reserved
-#    ----------------------------------------------------------------------
+#    ------------------------------------------------------------
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
+#    This program is free software: you can redistribute it
+#    and/or modify it under the terms of the GNU Affero
+#    General Public License as published by the Free Software
+#    Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -22,8 +23,9 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero
+#    General Public License along with this program.
+#    If not, see <https://www.gnu.org/licenses/>.
 
 
 name:
@@ -251,7 +253,8 @@ jobs:
                 "gh" \
                 "git" \
                 "jq" \
-                "tree"
+                "tree" \
+                "unzip"
       # - name:
       #     Installs Capnproto.
       #   run: |
@@ -654,6 +657,7 @@ jobs:
               install \
                 -y \
                 "clang" \
+                "jq" \
                 "ninja"
           # This doesn't work
           # /entrypoint.sh \
@@ -732,6 +736,20 @@ jobs:
                   "PKGBUILD" \
                   "pkgname")"
       - name:
+          Installs latest Crash Bash Library.
+        run: |
+          git \
+            clone \
+              "https://github.com/themartiancompany/crash-bash"
+          cd \
+            "crash-bash"
+          mkdir \
+            -p \
+            "/usr/lib/libcrash-bash"
+          make \
+            PREFIX="/usr" \
+            install
+      - name:
           Installs latest Reallymakepkg.
         run: |
           /entrypoint.sh \
@@ -767,6 +785,23 @@ jobs:
               -vDm644 \
               "${HOME}/reallymakepkg-src/configs/makepkg.android.conf" \
               "/data/data/com.termux/files/usr/etc/reallymakepkg/makepkg.android.conf"
+      - name:
+          Installs latest gl-dl.
+        run: |
+          /entrypoint.sh \
+            git \
+              clone \
+                --single-branch \
+                --depth=1 \
+                "https://github.com/themartiancompany/gl-dl" \
+                "${HOME}/gl-dl-src" || \
+            true
+          cd \
+            "${HOME}/gl-dl-src"
+          /entrypoint.sh \
+            make \
+              PREFIX="/usr" \
+              install-scripts
       - name:
           Installs latest EVM GNUPG.
         run: |
@@ -827,7 +862,19 @@ jobs:
               install-fur
       - name:
           Installs build dependencies.
+        env:
+          GH_TOKEN:
+            ${{ secrets.GITHUB_TOKEN }}
         run: |
+          _evmfs="false" \
+            -v \
+            recipe-get \
+              -o \
+                "array" \
+              -d \
+                " " \
+              "PKGBUILD" \
+              "makedepends"
           _evmfs="false" \
             recipe-get \
               -o \
@@ -848,7 +895,6 @@ jobs:
               pacman \
                 -S \
                   --noconfirm \
-                  jq \
                   "${_depend_name}" \
                   --overwrite="*" || \
                 true
@@ -874,10 +920,12 @@ jobs:
       - name:
           Builds the Android package.
         run: |
-          export \
-            _arch="$( \
-              uname \
-                -m)"
+          /entrypoint.sh \
+            recipe-get \
+              -v \
+              "PKGBUILD" \
+               "pkgbase" || \
+          true
           export \
             _pkgbase="$( \
               /entrypoint.sh \
@@ -1071,7 +1119,8 @@ jobs:
           pacman \
             -S \
             --noconfirm \
-              "nodejs-lts"
+              "nodejs-lts-jod" || \
+          true
           ln \
             -sf \
             "${PREFIX}/bin" \
@@ -1089,7 +1138,8 @@ jobs:
             "python-docutils" \
             "python-pip" \
             "python-build" \
-            "tree"
+            "tree" \
+            "unzip"
       - uses:
           actions/checkout@v4.2.2
       - name:
@@ -1488,6 +1538,20 @@ jobs:
             "user:user" \
             "${PWD}"
       - name:
+          Installs latest Crash Bash Library.
+        run: |
+          git \
+            clone \
+              "https://github.com/themartiancompany/crash-bash"
+          cd \
+            "crash-bash"
+          mkdir \
+            -p \
+            "/usr/lib/libcrash-bash"
+          make \
+            PREFIX="/usr" \
+            install
+      - name:
           Installs latest Reallymakepkg.
         run: |
           pacman \
@@ -1542,6 +1606,21 @@ jobs:
             PREFIX="/usr" \
             install-scripts
       - name:
+          Installs latest gl-dl.
+        run: |
+          git \
+            clone \
+              --single-branch \
+              --depth=1 \
+              "https://github.com/themartiancompany/gl-dl" \
+              "${HOME}/gl-dl-src" || \
+          true
+          cd \
+            "${HOME}/gl-dl-src"
+          make \
+            PREFIX="/usr" \
+            install-scripts
+      - name:
           Installs latest Gur.
         run: |
           git \
@@ -1590,6 +1669,9 @@ jobs:
                 "pkgname")"
       - name:
           Installs build dependencies.
+        env:
+          GH_TOKEN:
+            ${{ secrets.GITHUB_TOKEN }}
         run: |
           ls
           _evmfs="false" \
@@ -1680,6 +1762,9 @@ jobs:
             -c \
               "cd ${PWD} && _evmfs="false" _git="false" _git_service="github" reallymakepkg -v -u -w '/home/user/${_pkgbase}-build' -- -df --nocheck --skippgpcheck && ls -lsh" - \
             "user"
+      - name:
+          Fix naming issue with architecture.
+        run: |
           export \
             _pkgname="$( \
               _evmfs="false" \
@@ -1739,7 +1824,7 @@ jobs:
         id:
           version
       - name:
-          Upload Arch package.
+          Uploads Arch package.
         uses:
           actions/upload-release-asset@v1
         env:
@@ -1790,6 +1875,7 @@ jobs:
             mingw-w64-${{ matrix.env }}-gcc
             mingw-w64-${{ matrix.env }}-nodejs
             python-docutils
+            unzip
       - name:
           Upgrade Arch environment.
         run: |
@@ -1916,6 +2002,36 @@ jobs:
             -vDm644 \
             "${HOME}/reallymakepkg-src/configs/makepkg.gnu.conf" \
             "/etc/reallymakepkg/makepkg.gnu.conf"
+      - name:
+          Installs latest EVM GNUPG.
+        run: |
+          git \
+            clone \
+              --single-branch \
+              --depth=1 \
+              "https://github.com/themartiancompany/evm-gnupg" \
+              "${HOME}/evm-gnupg-src" || \
+          true
+          cd \
+            "${HOME}/evm-gnupg-src"
+          make \
+            PREFIX="/usr" \
+            install-scripts
+      - name:
+          Installs latest gl-dl.
+        run: |
+          git \
+            clone \
+              --single-branch \
+              --depth=1 \
+              "https://github.com/themartiancompany/gl-dl" \
+              "${HOME}/gl-dl-src" || \
+          true
+          cd \
+            "${HOME}/gl-dl-src"
+          make \
+            PREFIX="/usr" \
+            install-scripts
       - name:
           Installs latest Gur.
         run: |
@@ -2142,6 +2258,9 @@ jobs:
             --skippgpcheck
           ls \
             -lsh
+      - name:
+          Fix naming issue with architecture.
+        run: |
           export \
             _pkgname="$( \
               _evmfs="false" \
