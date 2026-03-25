@@ -70,7 +70,8 @@ else
 fi
 _target=m68k-elf
 _target_cpu=m68000
-pkgbase="${_target}-gcc-bootstrap"
+_pkg=gcc
+pkgbase="${_target}-${_pkg}-bootstrap"
 pkgname=(
   "${pkgbase}"
 )
@@ -78,7 +79,7 @@ pkgver=15.2.0
 _mpfrver=4.2.2
 _mpcver=1.3.1
 _gmpver=6.3.0
-pkgrel=10
+pkgrel=11
 _pkgdesc=(
   "The GNU Compiler Collection."
   "Bootstrap for toolchain building (${_target})"
@@ -99,7 +100,7 @@ license=(
   'FDL'
   'custom'
 )
-url="http://gcc.gnu.org"
+url="http://${_pkg}.gnu.org"
 depends=(
   "${_target}-binutils>=2.29-1"
   'zlib'
@@ -113,7 +114,7 @@ if [[ "${_os}" == "Android" ]]; then
   )
 fi
 conflicts=(
-  "${_target}-gcc"
+  "${_target}-${_pkg}"
 )
 options=(
   '!emptydirs'
@@ -121,9 +122,10 @@ options=(
   '!strip'
 )
 PKGEXT="pkg.tar.xz"
+_tarname="${_pkg}-${pkgver}"
 source=(
-  "https://ftp.gnu.org/gnu/gcc/gcc-${pkgver}/gcc-${pkgver}.tar.xz"
-  "https://ftp.gnu.org/gnu/gcc/gcc-${pkgver}/gcc-${pkgver}.tar.xz.sig"
+  "https://ftp.gnu.org/gnu/${_pkg}/${_tarname}/${_tarname}.tar.xz"
+  "https://ftp.gnu.org/gnu/${_pkg}/${_tarname}/${_tarname}.tar.xz.sig"
   "https://ftp.gnu.org/gnu/mpfr/mpfr-${_mpfrver}.tar.xz"
   "https://ftp.gnu.org/gnu/mpfr/mpfr-${_mpfrver}.tar.xz.sig"
   "https://ftp.gnu.org/gnu/mpc/mpc-${_mpcver}.tar.gz"
@@ -133,34 +135,45 @@ source=(
 )
         
 sha256sums=(
-  SKIP
-  SKIP
-  SKIP
-  SKIP
-  SKIP
-  SKIP
-  SKIP
-  SKIP
+  "SKIP"
+  "SKIP"
+  "SKIP"
+  "SKIP"
+  "SKIP"
+  "SKIP"
+  "SKIP"
+  "SKIP"
 )
 validpgpkeys=(
-  13975A70E63C361C73AE69EF6EEB81F8981C74C7
-  A534BE3F83E241D918280AEB5831D11A0D4DB02A
-  AD17A21EF8AED8F1CC02DBD9F7D5C9BF765C61E3
-  343C2FF0FBEE5EC2EDBEF399F3599FF828C67298
+  "13975A70E63C361C73AE69EF6EEB81F8981C74C7"
+  "A534BE3F83E241D918280AEB5831D11A0D4DB02A"
+  "AD17A21EF8AED8F1CC02DBD9F7D5C9BF765C61E3"
+  "343C2FF0FBEE5EC2EDBEF399F3599FF828C67298"
 )
 
 prepare() {
-  cd ${srcdir}/gcc-${pkgver}
+  cd \
+    "${srcdir}/${_tarname}"
 
   # symlinks for in-tree build
-  ln -s ../mpfr-${_mpfrver}
-  ln -s ../mpc-${_mpcver}
-  ln -s ../gmp-${_gmpver}
+  ln \
+    -s \
+    "../mpfr-${_mpfrver}"
+  ln \
+    -s \
+    "../mpc-${_mpcver}"
+  ln \
+    -s \
+    "../gmp-${_gmpver}"
 
-  # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
-  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc,mpfr-${_mpfrver},mpc-${_mpcver},gmp-${_gmpver}}/configure
-
-  mkdir ${srcdir}/gcc-build
+  # hack! - some configure tests for
+  # header files using "$CPP $CPPFLAGS"
+  sed \
+    -i \
+    "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" \
+    {"libiberty","gcc","mpfr-${_mpfrver}","mpc-${_mpcver}","gmp-${_gmpver}"}"/configure"
+  mkdir \
+    "${srcdir}/${_pkg}-build"
 }
 
 build() {
@@ -186,18 +199,23 @@ build() {
   export \
     CXXFLAGS=${CXXFLAGS//-Werror=format-security/}
   cd \
-    "${srcdir}/gcc-build"
-  "../gcc-${pkgver}/configure" \
+    "${srcdir}/${_pkg}-build"
+  "../${_tarname}/configure" \
     "${_configure_opts[@]}"
   make \
     all-gcc
 }
 
 package_m68k-elf-gcc-bootstrap() {
+  local \
+    _make_opts=()
+  _make_opts+=(
+    DESTDIR="${pkgdir}"
+  )
   cd \
     ${srcdir}/gcc-build
   make \
-    DESTDIR=${pkgdir} \
+    "${_make_opts[@]}" \
     "install-gcc"
   rm \
     -rf \
